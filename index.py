@@ -22,7 +22,7 @@ class Game(object):
     def preload(self, *args):
         this = javascript.this()
 
-        this.load.setBaseURL('http://labs.phaser.io')
+        this.load.setBaseURL('https://labs.phaser.io')
         this.load.image('logo', 'assets/sprites/phaser3-logo.png')
 
 
