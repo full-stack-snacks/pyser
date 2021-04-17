@@ -1,0 +1,18 @@
+[[package]]
+name = "brython"
+version = "3.9.1"
+description = "Brython is an implementation of Python 3 running in the browser"
+category = "main"
+optional = false
+python-versions = "*"
+
+[metadata]
+lock-version = "1.1"
+python-versions = "^3.8"
+content-hash = "6439d14d554a9849a029cf1245669c05aa295f2f574a65265b727e93cecd80f4"
+
+[metadata.files]
+brython = [
+    {file = "brython-3.9.1-py3.9.egg", hash = "sha256:2c517c513bc945a9753df9c29352e86136ab9f7837351b50dbf90ac4ec94af60"},
+    {file = "brython-3.9.1.tar.gz", hash = "sha256:e331145c5b8f2058c418b842d99047900752bff33af678e3022742ac64804184"},
+]
