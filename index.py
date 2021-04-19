@@ -164,7 +164,9 @@ class Game(object):
 
             self.player.anims.play("turn")
 
-        if self.cursors.up.isDown and self.player.body.touching.down:
+        if (
+            self.cursors.up.isDown or self.cursors.space.isDown
+        ) and self.player.body.touching.down:
 
             self.player.setVelocityY(-330)
 
