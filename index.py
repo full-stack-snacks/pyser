@@ -36,6 +36,7 @@ class Game(object):
         this.load.image("arrow", "assets/arrow.png")
         this.load.image("note", "assets/sticky-purple.png")
         this.load.image("note2", "assets/sticky-red.png")
+        this.load.image("current-note", "assets/sticky-yellow.png")
         this.load.image("crown", "assets/crown.png")
 
     def create(self, *args):
@@ -50,7 +51,7 @@ class Game(object):
         self.crown.setScale(0.5)
 
         self.crown.setX(self.head_display_node.group.x)
-        self.crown.setY(self.head_display_node.group.y - 100)
+        self.crown.setY(self.head_display_node.group.y - 80)
 
         def drag(pointer, gameObject, dragX, dragY):
             gameObject.x = dragX
@@ -60,22 +61,23 @@ class Game(object):
         this.input.on("drag", drag)
 
         self.note = this.add.sprite(400, 400, "note")
-        self.note.setScale(0.1)
+        self.note.setScale(0.15)
         self.note.setInteractive()
         this.input.setDraggable(self.note)
 
         self.note2 = this.add.sprite(450, 400, "note2")
-        self.note2.setScale(0.1)
+        self.note2.setScale(0.15)
         self.note2.setInteractive()
         this.input.setDraggable(self.note2)
+
+        self.current_note = this.add.sprite(500, 400, "current-note")
+        self.current_note.setScale(0.1)
+        self.current_note.setInteractive()
+        this.input.setDraggable(self.current_note)
 
     def update(self, *args):
         this = javascript.this()
         # self.arrow.rotation += 0.1
-
-    def clear_head(self, display_node):
-        self.head_display_node.circle.setStrokeStyle(0)
-        self.head_display_node = display_node
 
 
 class DisplayNode:
@@ -93,11 +95,6 @@ class DisplayNode:
                 this.rotation = 0
                 this.setX(this.x + 200)
 
-        def make_head(pointer, *args):
-            this = javascript.this()
-            parent and parent.clear_head(self)
-            this.setStrokeStyle(8, 0xEFC53F)
-
         self.group = this.add.container()
 
         self.arrow = this.add.sprite(100, 0, "arrow").setInteractive()
@@ -106,9 +103,9 @@ class DisplayNode:
         self.group.add(self.arrow)
 
         self.circle = this.add.circle(0, 0, 50, 0x9966FF).setInteractive()
-        self.circle.on("pointerup", make_head)
+        self.circle.setStrokeStyle(8, 0xEFC53F)
 
-        self.text = this.add.text(0, 0, node.value)
+        self.text = this.add.text(-5, -5, node.value)
 
         self.group.add(self.circle)
         self.group.add(self.text)
