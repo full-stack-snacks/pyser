@@ -24,9 +24,10 @@ class Game(object):
         self.game = window.Phaser.Game.new(config)
 
         self.linked_list = LinkedList()
-        self.linked_list.insert("A")
-        self.linked_list.insert("B")
+        self.linked_list.insert("D")
         self.linked_list.insert("C")
+        self.linked_list.insert("B")
+        self.linked_list.insert("A")
 
         self.head_display_node = None
 
@@ -60,17 +61,17 @@ class Game(object):
         this.input.setDraggable(self.crown)
         this.input.on("drag", drag)
 
-        self.note = this.add.sprite(400, 400, "note")
+        self.note = this.add.sprite(100, 500, "note")
         self.note.setScale(0.15)
         self.note.setInteractive()
         this.input.setDraggable(self.note)
 
-        self.note2 = this.add.sprite(450, 400, "note2")
+        self.note2 = this.add.sprite(150, 500, "note2")
         self.note2.setScale(0.15)
         self.note2.setInteractive()
         this.input.setDraggable(self.note2)
 
-        self.current_note = this.add.sprite(500, 400, "current-note")
+        self.current_note = this.add.sprite(200, 500, "current-note")
         self.current_note.setScale(0.1)
         self.current_note.setInteractive()
         this.input.setDraggable(self.current_note)
@@ -88,17 +89,22 @@ class DisplayNode:
         def point_left(pointer, *args):
             this = javascript.this()
 
-            if this.rotation == 0:
-                this.rotation = 45 // 2
-                this.setX(this.x - 200)
+            if this.rotation == 0.5:
+                this.rotation = -2.5
+                this.setX(this.x - 170)
+                this.setY(this.y - 70)
             else:
-                this.rotation = 0
-                this.setX(this.x + 200)
+                this.rotation = 0.5
+                this.setX(this.x + 170)
+                this.setY(this.y + 70)
+
+                pass
 
         self.group = this.add.container()
 
-        self.arrow = this.add.sprite(100, 0, "arrow").setInteractive()
+        self.arrow = this.add.sprite(90, 30, "arrow").setInteractive()
         self.arrow.on("pointerup", point_left)
+        self.arrow.rotation = 0.5
 
         self.group.add(self.arrow)
 
@@ -115,7 +121,7 @@ class DisplayNode:
         self.group.setX(x)
 
         if node.next:
-            DisplayNode(this, node.next, x + 200, y + 50, parent=parent)
+            DisplayNode(this, node.next, x + 150, y + 100, parent=parent)
 
 
 GAME = Game()
