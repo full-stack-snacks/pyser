@@ -1,5 +1,7 @@
 from browser import window
 import javascript
+from linked_list import LinkedList
+
 
 Phaser = window.Phaser
 
@@ -11,13 +13,7 @@ class Game(object):
             "type": Phaser.AUTO,
             "width": 800,
             "height": 600,
-            "physics": {
-                "default": "arcade",
-                "arcade": {
-                    "gravity": {"y": 300},
-                    "debug": False,
-                },
-            },
+            "backgroundColor": "#efefef",
             "scene": {
                 "preload": self.preload,
                 "create": self.create,
@@ -26,149 +22,106 @@ class Game(object):
         }
 
         self.game = window.Phaser.Game.new(config)
-        self.score = 0
+
+        self.linked_list = LinkedList()
+        self.linked_list.insert("D")
+        self.linked_list.insert("C")
+        self.linked_list.insert("B")
+        self.linked_list.insert("A")
+
+        self.head_display_node = None
 
     def preload(self, *args):
         this = javascript.this()
-
         this.load.image("sky", "assets/sky.png")
-        this.load.image("ground", "assets/platform.png")
-        this.load.image("star", "assets/star.png")
-        this.load.image("bomb", "assets/bomb.png")
-        this.load.spritesheet(
-            "dude", "assets/dude.png", {"frameWidth": 32, "frameHeight": 48}
-        )
+        this.load.image("arrow", "assets/arrow.png")
+        this.load.image("note", "assets/sticky-purple.png")
+        this.load.image("note2", "assets/sticky-red.png")
+        this.load.image("current-note", "assets/sticky-yellow.png")
+        this.load.image("crown", "assets/crown.png")
 
     def create(self, *args):
         this = javascript.this()
         this.add.image(400, 300, "sky")
 
-        self.platforms = this.physics.add.staticGroup()
-
-        self.platforms.create(400, 568, "ground").setScale(2).refreshBody()
-
-        self.platforms.create(600, 400, "ground")
-        self.platforms.create(50, 250, "ground")
-        self.platforms.create(750, 220, "ground")
-
-        self.player = this.physics.add.sprite(100, 450, "dude")
-
-        self.player.setBounce(0.2)
-        self.player.setCollideWorldBounds(True)
-
-        this.physics.add.collider(self.player, self.platforms)
-
-        this.anims.create(
-            {
-                "key": "left",
-                "frames": this.anims.generateFrameNumbers(
-                    "dude", {"start": 0, "end": 3}
-                ),
-                "frameRate": 10,
-                "repeat": -1,
-            }
+        self.head_display_node = DisplayNode(
+            this, self.linked_list.head, parent=self
         )
 
-        this.anims.create(
-            {
-                "key": "turn",
-                "frames": [{"key": "dude", "frame": 4}],
-                "frameRate": 20,
-            }
-        )
+        self.crown = this.add.sprite(200, 200, "crown").setInteractive()
+        self.crown.setScale(0.5)
 
-        this.anims.create(
-            {
-                "key": "right",
-                "frames": this.anims.generateFrameNumbers(
-                    "dude", {"start": 5, "end": 8}
-                ),
-                "frameRate": 10,
-                "repeat": -1,
-            }
-        )
+        self.crown.setX(self.head_display_node.group.x)
+        self.crown.setY(self.head_display_node.group.y - 80)
 
-        self.stars = this.physics.add.group(
-            {
-                "key": "star",
-                "repeat": 11,
-                "setXY": {"x": 12, "y": 0, "stepX": 70},
-            }
-        )
+        def drag(pointer, gameObject, dragX, dragY):
+            gameObject.x = dragX
+            gameObject.y = dragY
 
-        def addBounce(child, *args):
-            child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8))
+        this.input.setDraggable(self.crown)
+        this.input.on("drag", drag)
 
-        self.stars.children.iterate(addBounce)
+        self.note = this.add.sprite(100, 500, "note")
+        self.note.setScale(0.15)
+        self.note.setInteractive()
+        this.input.setDraggable(self.note)
 
-        def collectStar(player, star):
-            star.disableBody(True, True)
-            self.score += 10
-            self.scoreText.setText("Score: " + str(self.score))
+        self.note2 = this.add.sprite(150, 500, "note2")
+        self.note2.setScale(0.15)
+        self.note2.setInteractive()
+        this.input.setDraggable(self.note2)
 
-            x = (
-                Phaser.Math.Between(400, 800)
-                if player.x < 400
-                else Phaser.Math.Between(0, 400)
-            )
-
-            bomb = bombs.create(x, 16, "bomb")
-            bomb.setBounce(1)
-            bomb.setCollideWorldBounds(True)
-            bomb.setVelocity(Phaser.Math.Between(-200, 200), 20)
-
-        this.physics.add.collider(self.stars, self.platforms)
-
-        this.physics.add.overlap(
-            self.player, self.stars, collectStar, None, this
-        )
-
-        self.scoreText = this.add.text(
-            16, 16, "score: 0", {"fontSize": "32px", "fill": "#000"}
-        )
-
-        def hitBomb(player, bomb):
-            this.physics.pause()
-
-            player.setTint(0xFF0000)
-
-            player.anims.play("turn")
-
-        bombs = this.physics.add.group()
-
-        this.physics.add.collider(bombs, self.platforms)
-
-        this.physics.add.collider(self.player, bombs, hitBomb, None, this)
+        self.current_note = this.add.sprite(200, 500, "current-note")
+        self.current_note.setScale(0.1)
+        self.current_note.setInteractive()
+        this.input.setDraggable(self.current_note)
 
     def update(self, *args):
-
         this = javascript.this()
+        # self.arrow.rotation += 0.1
 
-        self.cursors = this.input.keyboard.createCursorKeys()
 
-        if self.cursors.left.isDown:
+class DisplayNode:
+    def __init__(self, this, node, x=150, y=150, parent=None):
 
-            self.player.setVelocityX(-160)
+        print(parent and parent.linked_list)
 
-            self.player.anims.play("left", True)
+        def point_left(pointer, *args):
+            this = javascript.this()
 
-        elif self.cursors.right.isDown:
+            if this.rotation == 0.5:
+                this.rotation = -2.5
+                this.setX(this.x - 170)
+                this.setY(this.y - 70)
+            else:
+                this.rotation = 0.5
+                this.setX(this.x + 170)
+                this.setY(this.y + 70)
 
-            self.player.setVelocityX(160)
+                pass
 
-            self.player.anims.play("right", True)
+        self.group = this.add.container()
 
-        else:
+        self.arrow = this.add.sprite(90, 30, "arrow").setInteractive()
+        self.arrow.on("pointerup", point_left)
+        self.arrow.rotation = 0.5
 
-            self.player.setVelocityX(0)
+        self.group.add(self.arrow)
 
-            self.player.anims.play("turn")
+        self.circle = this.add.circle(0, 0, 50, 0x9966FF).setInteractive()
+        self.circle.setStrokeStyle(8, 0xEFC53F)
 
-        if (
-            self.cursors.up.isDown or self.cursors.space.isDown
-        ) and self.player.body.touching.down:
+        self.text = this.add.text(-5, -5, node.value)
 
-            self.player.setVelocityY(-330)
+        self.group.add(self.circle)
+        self.group.add(self.text)
+
+        # self.group.setAlpha(0.1)
+        self.group.setY(y)
+        self.group.setX(x)
+
+        if node.next:
+            DisplayNode(this, node.next, x + 150, y + 100, parent=parent)
 
 
 GAME = Game()

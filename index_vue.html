@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.9.3/brython.min.js"
+    integrity="sha512-Idh2r/vlinKy7iPSPHkWFGfS0VTvg+eJSsMe84WJ6cV1kuE7PLPhSbm8yI4X16NmDhtYIAd17yVsIs6j0pz5uA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.9.3/brython_stdlib.min.js"
+    integrity="sha512-/dbn5WlrCaChpaIirA1PAiMtxmo2WHXbS1Qu4DjssLekyFQwPunfQOTqQ0YNeGom7uRjJpvg7LVGSVuWN3noJg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <script src="https://unpkg.com/vue"></script>
+
+
+  <title>Pue</title>
+</head>
+
+<body>
+
+  <div id="app">
+    <button @click="add_node">add</button>
+
+    <span v-for="todo in todos">
+      { {{ todo.text }} } ->
+    </span>
+    <span>NULL</span>
+
+  </div>
+
+  <body onload="brython()">
+    <script type="text/python" src="index_vue.py"></script>
+  </body>
+</body>
+
+</html>
