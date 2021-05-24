@@ -44,6 +44,15 @@ class Game(object):
         this = javascript.this()
         this.add.image(400, 300, "sky")
 
+        this.add.text(
+            300,
+            100,
+            "Reverse this Linked List",
+            {
+                "fontSize": "32px",
+            },
+        )
+
         self.head_display_node = DisplayNode(
             this, self.linked_list.head, parent=self
         )
