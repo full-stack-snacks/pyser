@@ -70,20 +70,24 @@ class Game(object):
         this.input.setDraggable(self.crown)
         this.input.on("drag", drag)
 
-        self.note = this.add.sprite(100, 500, "note")
-        self.note.setScale(0.15)
-        self.note.setInteractive()
-        this.input.setDraggable(self.note)
+        self.notes = this.add.container(100, 500)
 
-        self.note2 = this.add.sprite(150, 500, "note2")
-        self.note2.setScale(0.15)
-        self.note2.setInteractive()
-        this.input.setDraggable(self.note2)
+        note = this.add.sprite(0, 0, "note")
+        note.setScale(0.15)
+        note.setInteractive()
+        this.input.setDraggable(note)
 
-        self.current_note = this.add.sprite(200, 500, "current-note")
-        self.current_note.setScale(0.1)
-        self.current_note.setInteractive()
-        this.input.setDraggable(self.current_note)
+        note2 = this.add.sprite(50, 0, "note2")
+        note2.setScale(0.15)
+        note2.setInteractive()
+        this.input.setDraggable(note2)
+
+        current_note = this.add.sprite(100, 0, "current-note")
+        current_note.setScale(0.1)
+        current_note.setInteractive()
+        this.input.setDraggable(current_note)
+
+        self.notes.add([note, note2, current_note])
 
     def update(self, *args):
         this = javascript.this()

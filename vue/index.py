@@ -23,10 +23,29 @@ def add_node(event):
     # print(todos.to_list())
 
 
+def data_func():
+    return {
+        "count": 1,
+    }
+
+
+Vue.component(
+    "button-counter-more",
+    {
+        "data": {data_func},
+        "template": '<button v-on:click="count++">You clicked me {{ count }} times.</button>',
+    },
+)
+
 app = Vue.new(
     {
         "el": "#app",
         "data": {"todos": todos.to_list()},
         "methods": {"add_node": add_node},
+        "template": "<button-counter-more />",
     }
 )
+
+
+def data_func():
+    return []
