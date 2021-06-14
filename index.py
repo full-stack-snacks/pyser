@@ -36,7 +36,9 @@ app = Vue.createApp(
     {
         "data": data,
         "template": """
+            <div class="p-8">
             <product-list :products="products" />
+            </div>
         """,
     }
 )

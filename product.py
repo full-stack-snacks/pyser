@@ -19,9 +19,9 @@ def data(*args):
 
 template = """
 
-<div @click="click_handler">
-    <img v-bind:src="path" />
-    <p>{{info}}</p>
+<div @click="click_handler" class="h-64">
+    <img class="h-full mx-auto" v-bind:src="path" />
+    <p class="text-center uppercase font-bold">{{info}}</p>
 </div>
 
 """

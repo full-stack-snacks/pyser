@@ -22,8 +22,8 @@ def data(*args):
 
 template = """
 
-<ul class="flex gap-x-16 p-8">
-    <li v-for="prod in working_products" :key="prod" class="flex-1 border">
+<ul class="flex gap-x-16 p-8 border border-8 border-gray-700 rounded">
+    <li v-for="prod in working_products" :key="prod" class="flex-1">
         <product :info='prod' :product_choice="handle_product_choice" />
     </li>
 </ul>
