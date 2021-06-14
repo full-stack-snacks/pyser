@@ -23,8 +23,8 @@ def data(*args):
 template = """
 
 <ul class="flex gap-x-16 p-8">
-    <li v-for="producto in working_products" :key="producto" class="flex-1 border">
-        <product :info='producto' :product_choice="handle_product_choice" />
+    <li v-for="prod in working_products" :key="prod" class="flex-1 border">
+        <product :info='prod' :product_choice="handle_product_choice" />
     </li>
 </ul>
 <p>{{ tallies }}</p>
