@@ -14,7 +14,7 @@ methods = {
 
 
 def data(*args):
-    return {"path": f"assets/{javascript.this().info}.jpg"}
+    return {"path": f"/bus-mall/assets/{javascript.this().info}.jpg"}
 
 
 template = """
